@@ -13,10 +13,11 @@ const Nav = styled(motion.nav)`
   position: fixed;
   top: 0;
   width: 100%;
-  height: 40px;
-  padding: 0 30px;
+  height: 60px;
+  padding: 0 60px;
   display: flex;
   justify-content: space-between;
+  z-index: 99;
 `;
 
 const Col = styled.div`
@@ -25,15 +26,16 @@ const Col = styled.div`
 `;
 
 const Logo = styled(motion.svg)`
-  width: 50px;
-  height: 40px;
-  margin-right: 30px;
+  width: 90px;
+  height: 60px;
+  margin-right: 50px;
   cursor: pointer;
 `;
 
 const Item = styled.li`
   list-style-type: none;
-  margin-right: 10px;
+  margin-right: 30px;
+  font-size: 1.5em;
 `;
 
 const Search = styled.form`
@@ -42,16 +44,17 @@ const Search = styled.form`
   position: relative;
 
   svg {
-    height: 17px;
+    height: 20px;
     z-index: 99;
     cursor: pointer;
   }
 `;
 const Input = styled(motion.input)`
   transform-origin: right center;
-  font-size: 0.8em;
+  width: 250px;
+  font-size: 1.5em;
   border: white 0.7px solid;
-  padding: 5px 5px 5px 35px;
+  padding: 10px 10px 10px 45px;
   outline: none;
   background-color: ${(props) => props.theme.black.darker};
   color: ${(props) => props.theme.white.default};
@@ -71,12 +74,12 @@ const LogoVariants: Variants = {
 
 const navVariants: Variants = {
   top: {
-    backgroundColor: "#14141444",
+    backgroundColor: "#14141419",
   },
   scroll: {
     backgroundColor: "#141414",
     transition: {
-      duration: 0.5,
+      duration: 0.1,
     },
   },
 };
@@ -134,9 +137,9 @@ const Header = () => {
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
-            initial={{ x: 125 }}
+            initial={{ x: 250 }}
             animate={{
-              x: search ? 25 : 125,
+              x: search ? 35 : 250,
               transition: {
                 type: "ease",
               },

@@ -7,6 +7,9 @@ import Home from "./Routes/Home";
 import Tv from "./Routes/Tv";
 import Search from "./Routes/Search";
 import { theme } from "./theme";
+import { RecoilRoot } from "recoil";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -85,14 +88,20 @@ const Router = createBrowserRouter([
   },
 ]);
 
+const client = new QueryClient();
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <RouterProvider router={Router} />
-    </ThemeProvider>
-  </React.StrictMode>
+  <RecoilRoot>
+    <QueryClientProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <ReactQueryDevtools initialIsOpen={true} />
+        <GlobalStyle />
+        <RouterProvider router={Router} />
+      </ThemeProvider>
+    </QueryClientProvider>
+  </RecoilRoot>
 );
