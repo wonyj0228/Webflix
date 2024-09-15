@@ -14,7 +14,7 @@ const Nav = styled(motion.nav)`
   top: 0;
   width: 100%;
   height: 60px;
-  padding: 0 60px;
+  padding: 10px 5%;
   display: flex;
   justify-content: space-between;
   z-index: 99;

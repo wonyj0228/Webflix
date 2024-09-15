@@ -9,6 +9,7 @@ import {
 import styled from "styled-components";
 import { makeImgUrl } from "../utils";
 import { useEffect, useState } from "react";
+import Slider from "../Components/Slider";
 
 const Wrapper = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
 
 const BigMovie = styled.div<{ $bgImg: string }>`
   width: 100%;
-  height: 100vh;
+  height: 95vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url(${(props) => props.$bgImg});
   background-size: 100% 100%;
@@ -31,7 +32,7 @@ const Info = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 280px;
-  padding: 0 60px;
+  padding: 0 5%;
   margin-bottom: 100px;
 `;
 
@@ -103,6 +104,11 @@ const Home = () => {
               상세정보
             </Btn>
           </Info>
+          {nowPlaying.data ? (
+            <Slider name="Now Playing" data={nowPlaying.data} />
+          ) : (
+            <div>Loading...</div>
+          )}
         </BigMovie>
       ) : (
         <div>Loading...</div>
