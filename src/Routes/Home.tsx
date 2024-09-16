@@ -33,7 +33,7 @@ const Info = styled.div`
   justify-content: space-between;
   height: 280px;
   padding: 0 5%;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 `;
 
 const Title = styled.div`
@@ -43,6 +43,12 @@ const Title = styled.div`
 const Overview = styled.p`
   font-size: 15px;
   width: 40%;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: keep-all;
 `;
 const Btn = styled.div`
   display: flex;
@@ -65,7 +71,7 @@ const Btn = styled.div`
 `;
 
 const Home = () => {
-  const [bigMovie, setBigMovie] = useState<number>(0);
+  const [bigMovie, setBigMovie] = useState<number>();
   const option = {
     staleTime: 600000, // 10분
     cacheTime: 900000, // 15분
@@ -92,7 +98,7 @@ const Home = () => {
 
   return (
     <Wrapper>
-      {popular.data ? (
+      {popular.data && bigMovie ? (
         <BigMovie $bgImg={makeImgUrl(popular.data[bigMovie].backdrop_path)}>
           <Info>
             <Title>{popular.data[bigMovie].title}</Title>
