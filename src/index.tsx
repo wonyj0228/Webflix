@@ -59,7 +59,6 @@ table {
   box-sizing: border-box;
 }
 body {
-  height: 200vh;
   font-weight: 300;
   font-size : 10px;
   font-family: 'Source Sans Pro', sans-serif;
@@ -82,6 +81,7 @@ const Router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, path: "/", element: <Home /> },
+      { path: "/:movieId", element: <Home /> },
       { path: "/tv", element: <Tv /> },
       { path: "/search", element: <Search /> },
     ],

@@ -12,5 +12,6 @@ export const theme: DefaultTheme = {
   },
   gray: {
     default: "#303030",
+    lighter: "#808080",
   },
 };

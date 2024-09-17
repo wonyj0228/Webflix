@@ -3,10 +3,12 @@ import { IMovie } from "../api";
 import { AnimatePresence, Variants, motion } from "framer-motion";
 import { makeImgUrl, useWindowDimensions } from "../utils";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 5%;
 `;
 const HeadTitle = styled.div`
   padding: 0 5%;
@@ -61,6 +63,7 @@ interface IProps {
 }
 
 const Slider = ({ name, data }: IProps) => {
+  const navigate = useNavigate();
   const width = useWindowDimensions();
 
   const [idx, setIdx] = useState<number>(0);
@@ -99,6 +102,8 @@ const Slider = ({ name, data }: IProps) => {
               return (
                 <Item
                   key={movie.id}
+                  onClick={() => navigate(`/${movie.id}`)}
+                  layoutId={movie.id + ""}
                   $bgImg={makeImgUrl(movie.poster_path, "w500")}
                   whileHover={{
                     scaleY: 1.2,

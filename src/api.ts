@@ -9,6 +9,7 @@ export interface IMovie {
   poster_path: string;
   release_date: string;
   title: string;
+  tagline: string;
 }
 
 export const getNowPlaying = () => {
@@ -38,4 +39,10 @@ export const getUpcomingMovie = () => {
   )
     .then((res) => res.json())
     .then((data) => data.results);
+};
+
+export const getMovieDetail = (movieId: string) => {
+  return fetch(
+    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}&language=ko-KR`
+  ).then((res) => res.json());
 };
