@@ -71,7 +71,7 @@ a {
   color:inherit;
 }
 ::-webkit-scrollbar {
-display: none;
+  display: none;
 }
 `;
 

@@ -11,7 +11,7 @@ import { makeImgUrl } from "../utils";
 import { useEffect, useState } from "react";
 import Slider from "../Components/Slider";
 import { LayoutGroup, Variants, motion } from "framer-motion";
-import { useMatch } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import Detail from "../Components/Detail";
 
 const Wrapper = styled.div`
@@ -19,6 +19,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding-bottom: 10vh;
 `;
 
 const BigMovie = styled.div<{ $bgImg: string }>`
@@ -101,6 +102,7 @@ const loadingVariants: Variants = {
 const Home = () => {
   const [bigMovie, setBigMovie] = useState<number>();
   const isDetail = useMatch("/:movieId");
+  const navigate = useNavigate();
 
   const option = {
     staleTime: 600000, // 10분
@@ -117,14 +119,23 @@ const Home = () => {
   ];
   const totalData = useQueries<UseQueryOptions<IMovie[], unknown>[]>(queries);
   const [nowPlaying, popular, topRated, upcoming] = totalData;
+  // const { isLoading, data } = useQuery("genres", getMovieGenres, option);
+  // const setGenre = useSetRecoilState(genreState);
 
   useEffect(() => {
     // BigMovie
     if (!popular.isLoading) {
       const bigMovieIdx = Math.ceil(Math.random() * 19);
       setBigMovie(bigMovieIdx);
+      console.log(nowPlaying);
     }
   }, [popular.isLoading]);
+
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     setGenre(data.genres);
+  //   }
+  // }, [isLoading]);
 
   // 뒷배경 스크롤 막기
   if (isDetail) {
@@ -141,7 +152,7 @@ const Home = () => {
             <Info>
               <Title>{popular.data[bigMovie].title}</Title>
               <Overview>{popular.data[bigMovie].overview}</Overview>
-              <Btn>
+              <Btn onClick={() => navigate(`/${popular.data[bigMovie].id}`)}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                   <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
                 </svg>
