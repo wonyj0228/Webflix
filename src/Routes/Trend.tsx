@@ -1,17 +1,21 @@
 import { useQuery } from 'react-query';
 import { getTrendMovies, IMovie } from '../api';
-import { queryOption } from '../utils';
-import { motion, Variants } from 'framer-motion';
+import { makeImgUrl, queryOption } from '../utils';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
+  min-width: 900px;
   height: 100vh;
+  min-height: 600px;
   padding: 0 5%;
+  display: flex;
 `;
 
 const Loading = styled.div`
-  height: 95vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,6 +25,57 @@ const Loading = styled.div`
     height: 100px;
   }
 `;
+
+const BigMovie = styled.div<{ $bgImg: string }>`
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),
+    url(${(props) => props.$bgImg});
+  background-size: 100% 100%;
+`;
+
+const List = styled.div`
+  position: relative;
+  width: 25%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  row-gap: 30%;
+
+  div:first-child {
+    background-position: 0% 100%;
+    border-radius: 0 0 20px 20px;
+  }
+
+  div:last-child {
+    border-radius: 20px 20px 0 0;
+  }
+`;
+
+const BackPoster = styled(motion.div)<{ $bgImg: string }>`
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url(${(props) => props.$bgImg});
+  background-size: 100% 135%;
+  box-shadow: 0 0 10px gray;
+  cursor: pointer;
+`;
+
+const FrontPoster = styled(motion.div)<{ $bgImg: string }>`
+  position: absolute;
+  z-index: 1;
+  width: 110%;
+  height: 60%;
+  left: -55%;
+  top: 20%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url(${(props) => props.$bgImg});
+  background-size: 100% 100%;
+  border-radius: 20px;
+  box-shadow: 0 0 30px gray;
+`;
+
 const loadingVariants: Variants = {
   initial: { rotateZ: 0 },
   animate: {
@@ -39,10 +94,48 @@ const Trend = () => {
     getTrendMovies,
     queryOption
   );
-  console.log(data);
+  const [curIdx, setCurIdx] = useState<number[]>([19, 0, 1]);
+
+  const prevMovie = () => {
+    setCurIdx((bfArr) => {
+      return bfArr.map((v) => (v === 0 ? 19 : v - 1));
+    });
+  };
+
+  const nextMovie = () => {
+    setCurIdx((bfArr) => {
+      return bfArr.map((v) => (v === 19 ? 0 : v + 1));
+    });
+  };
+
   return (
     <Wrapper>
-      {isLoading ? (
+      {data && !isLoading ? (
+        <>
+          <BigMovie
+            $bgImg={makeImgUrl(data[curIdx[1]].backdrop_path)}
+          ></BigMovie>
+
+          <AnimatePresence>
+            <List>
+              <BackPoster
+                key={data[curIdx[0]].id}
+                $bgImg={makeImgUrl(data[curIdx[0]].poster_path)}
+                onClick={prevMovie}
+              />
+              <FrontPoster
+                key={data[curIdx[1]].id}
+                $bgImg={makeImgUrl(data[curIdx[1]].poster_path)}
+              />
+              <BackPoster
+                key={data[curIdx[2]].id}
+                $bgImg={makeImgUrl(data[curIdx[2]].poster_path)}
+                onClick={nextMovie}
+              />
+            </List>
+          </AnimatePresence>
+        </>
+      ) : (
         <Loading>
           <motion.svg
             variants={loadingVariants}
@@ -62,8 +155,6 @@ const Trend = () => {
             <line x1="15.03" y1="15.03" x2="23.51" y2="23.51" />
           </motion.svg>
         </Loading>
-      ) : (
-        <></>
       )}
     </Wrapper>
   );
