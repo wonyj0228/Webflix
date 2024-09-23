@@ -1,18 +1,22 @@
-import { UseQueryOptions, useQueries } from "react-query";
+import { UseQueryOptions, useQueries, useQuery } from 'react-query';
 import {
   IMovie,
+  getMovieGenres,
   getNowPlaying,
   getPopularMovie,
   getTopRatedMovie,
   getUpcomingMovie,
-} from "../api";
-import styled from "styled-components";
-import { makeImgUrl } from "../utils";
-import { useEffect, useState } from "react";
-import Slider from "../Components/Slider";
-import { LayoutGroup, Variants, motion } from "framer-motion";
-import { useMatch, useNavigate } from "react-router-dom";
-import Detail from "../Components/Detail";
+} from '../api';
+import styled from 'styled-components';
+import { makeImgUrl } from '../utils';
+import { useEffect, useState } from 'react';
+import Slider from '../Components/Slider';
+import { LayoutGroup, Variants, motion } from 'framer-motion';
+import { useMatch, useNavigate } from 'react-router-dom';
+import Detail from '../Components/Detail';
+import { queryOption } from '../utils';
+import { useSetRecoilState } from 'recoil';
+import { genreState } from '../atom';
 
 const Wrapper = styled.div`
   position: relative;
@@ -25,6 +29,7 @@ const Wrapper = styled.div`
 const BigMovie = styled.div<{ $bgImg: string }>`
   width: 100%;
   height: 95vh;
+  min-height: 700px;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url(${(props) => props.$bgImg});
   background-size: 100% 100%;
@@ -92,7 +97,7 @@ const loadingVariants: Variants = {
   animate: {
     rotateZ: 360,
     transition: {
-      ease: "linear",
+      ease: 'linear',
       duration: 2,
       repeat: Infinity,
     },
@@ -101,26 +106,35 @@ const loadingVariants: Variants = {
 
 const Home = () => {
   const [bigMovie, setBigMovie] = useState<number>();
-  const isDetail = useMatch("/:movieId");
+  const isDetail = useMatch('/:movieId');
   const navigate = useNavigate();
 
-  const option = {
-    staleTime: 600000, // 10분
-    cacheTime: 900000, // 15분
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  };
   const queries = [
-    { queryKey: ["movies", "nowPlaying"], queryFn: getNowPlaying, ...option },
-    { queryKey: ["movies", "popular"], queryFn: getPopularMovie, ...option },
-    { queryKey: ["movies", "topRated"], queryFn: getTopRatedMovie, ...option },
-    { queryKey: ["movies", "upcoming"], queryFn: getUpcomingMovie, ...option },
+    {
+      queryKey: ['movies', 'nowPlaying'],
+      queryFn: getNowPlaying,
+      ...queryOption,
+    },
+    {
+      queryKey: ['movies', 'popular'],
+      queryFn: getPopularMovie,
+      ...queryOption,
+    },
+    {
+      queryKey: ['movies', 'topRated'],
+      queryFn: getTopRatedMovie,
+      ...queryOption,
+    },
+    {
+      queryKey: ['movies', 'upcoming'],
+      queryFn: getUpcomingMovie,
+      ...queryOption,
+    },
   ];
   const totalData = useQueries<UseQueryOptions<IMovie[], unknown>[]>(queries);
   const [nowPlaying, popular, topRated, upcoming] = totalData;
-  // const { isLoading, data } = useQuery("genres", getMovieGenres, option);
-  // const setGenre = useSetRecoilState(genreState);
+  const { isLoading, data } = useQuery('genres', getMovieGenres, queryOption);
+  const setGenre = useSetRecoilState(genreState);
 
   useEffect(() => {
     // BigMovie
@@ -131,17 +145,17 @@ const Home = () => {
     }
   }, [popular.isLoading]);
 
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     setGenre(data.genres);
-  //   }
-  // }, [isLoading]);
+  useEffect(() => {
+    if (!isLoading) {
+      setGenre(data.genres);
+    }
+  }, [isLoading]);
 
   // 뒷배경 스크롤 막기
   if (isDetail) {
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
   } else {
-    document.body.style.overflow = "auto";
+    document.body.style.overflow = 'auto';
   }
 
   return (
@@ -177,7 +191,7 @@ const Home = () => {
             )}
           </LayoutGroup>
 
-          {isDetail && <Detail movieId={isDetail.params.movieId || ""} />}
+          {isDetail && <Detail movieId={isDetail.params.movieId || ''} />}
         </>
       ) : (
         <Loading>

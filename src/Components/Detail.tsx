@@ -1,9 +1,9 @@
-import { UseQueryOptions, useQueries } from "react-query";
-import styled from "styled-components";
-import { IMovie, ICast, getMovieCredit, getMovieDetail } from "../api";
-import { useNavigate } from "react-router-dom";
-import { AnimatePresence, easeIn, motion } from "framer-motion";
-import { makeImgUrl } from "../utils";
+import { UseQueryOptions, useQueries } from 'react-query';
+import styled from 'styled-components';
+import { IMovie, ICast, getMovieCredit, getMovieDetail } from '../api';
+import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, easeIn, motion } from 'framer-motion';
+import { makeImgUrl, queryOption } from '../utils';
 
 const Loading = styled.div`
   height: 100%;
@@ -116,7 +116,7 @@ const loadingVariants = {
   animate: {
     rotateZ: 360,
     transition: {
-      ease: "linear",
+      ease: 'linear',
       duration: 2,
       repeat: Infinity,
     },
@@ -124,26 +124,19 @@ const loadingVariants = {
 };
 const Detail = ({ movieId }: IProps) => {
   const navigate = useNavigate();
-  const option = {
-    staleTime: 600000, // 10분
-    cacheTime: 900000, // 15분
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  };
 
   const [{ data: detail }, { data: credit }] = useQueries<
     [UseQueryOptions<IMovie, unknown>, UseQueryOptions<ICast, unknown>]
   >([
     {
-      queryKey: [`${movieId}`, "detail"],
+      queryKey: [`${movieId}`, 'detail'],
       queryFn: () => getMovieDetail(movieId),
-      ...option,
+      ...queryOption,
     },
     {
-      queryKey: [`${movieId}`, "credit"],
+      queryKey: [`${movieId}`, 'credit'],
       queryFn: () => getMovieCredit(movieId),
-      ...option,
+      ...queryOption,
     },
   ]);
 
@@ -156,7 +149,7 @@ const Detail = ({ movieId }: IProps) => {
           animate={{
             y: 0,
             opacity: 1,
-            transition: { delay: 0.3, ease: "easeInOut" },
+            transition: { delay: 0.3, ease: 'easeInOut' },
           }}
         >
           {detail && credit ? (
@@ -198,8 +191,8 @@ const Detail = ({ movieId }: IProps) => {
                     <HeadCol>출연 | </HeadCol>
                     <span>
                       {credit.cast.reduce(
-                        (acc, cur) => acc + " " + cur.name,
-                        ""
+                        (acc, cur) => acc + ' ' + cur.name,
+                        ''
                       )}
                     </span>
                   </div>

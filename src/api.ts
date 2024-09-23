@@ -1,4 +1,4 @@
-const BASE_URL = "https://api.themoviedb.org/3";
+const BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = process.env.REACT_APP_TMDB_API;
 
 interface IGenre {
@@ -69,4 +69,12 @@ export const getMovieCredit = (movieId: string) => {
   return fetch(
     `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}&language=ko-KR`
   ).then((res) => res.json());
+};
+
+export const getTrendMovies = () => {
+  return fetch(
+    `${BASE_URL}/trending/movie/day?api_key=${API_KEY}&language=ko-KR`
+  )
+    .then((res) => res.json())
+    .then((data) => data.results);
 };

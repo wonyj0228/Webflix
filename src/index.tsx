@@ -1,15 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "./Routes/Home";
-import Tv from "./Routes/Tv";
-import Search from "./Routes/Search";
-import { theme } from "./theme";
-import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Home from './Routes/Home';
+import Search from './Routes/Search';
+import { theme } from './theme';
+import { RecoilRoot } from 'recoil';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import Trend from './Routes/Trend';
 
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -61,7 +61,7 @@ table {
 body {
   font-weight: 300;
   font-size : 10px;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Noto Sans", "Noto Sans KR", sans-serif;
   color:${(props) => props.theme.white.default};
   line-height: 1.2;
   background-color: ${(props) => props.theme.black.default};
@@ -77,13 +77,13 @@ a {
 
 const Router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
-      { index: true, path: "/", element: <Home /> },
-      { path: "/:movieId", element: <Home /> },
-      { path: "/tv", element: <Tv /> },
-      { path: "/search", element: <Search /> },
+      { index: true, path: '/', element: <Home /> },
+      { path: '/:movieId', element: <Home /> },
+      { path: '/trend', element: <Trend /> },
+      { path: '/search', element: <Search /> },
     ],
   },
 ]);
@@ -91,7 +91,7 @@ const Router = createBrowserRouter([
 const client = new QueryClient();
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById('root') as HTMLElement
 );
 
 root.render(

@@ -4,10 +4,10 @@ import {
   useAnimation,
   useMotionValueEvent,
   useScroll,
-} from "framer-motion";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+} from 'framer-motion';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 const Nav = styled(motion.nav)`
   position: fixed;
@@ -74,10 +74,10 @@ const LogoVariants: Variants = {
 
 const navVariants: Variants = {
   top: {
-    backgroundColor: "#14141419",
+    backgroundColor: '#14141419',
   },
   scroll: {
-    backgroundColor: "#141414",
+    backgroundColor: '#141414',
     transition: {
       duration: 0.1,
     },
@@ -99,11 +99,11 @@ const Header = () => {
     },
   };
 
-  useMotionValueEvent(scrollY, "change", () => {
+  useMotionValueEvent(scrollY, 'change', () => {
     if (scrollY.get() > 80) {
-      navAnimation.start("scroll");
+      navAnimation.start('scroll');
     } else {
-      navAnimation.start("top");
+      navAnimation.start('top');
     }
   });
 
@@ -113,7 +113,7 @@ const Header = () => {
         <Logo
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1024 276.742"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
           variants={LogoVariants}
           initial="normal"
           whileHover="hover"
@@ -124,10 +124,10 @@ const Header = () => {
           />
         </Logo>
         <Item>
-          <Link to={"/"}>Movie</Link>
+          <Link to={'/'}>영화</Link>
         </Item>
         <Item>
-          <Link to={"/tv"}>Tv Shows</Link>
+          <Link to={'/trend'}>트랜드</Link>
         </Item>
       </Col>
       <Col>
@@ -141,7 +141,7 @@ const Header = () => {
             animate={{
               x: search ? 35 : 250,
               transition: {
-                type: "ease",
+                type: 'ease',
               },
             }}
           >
