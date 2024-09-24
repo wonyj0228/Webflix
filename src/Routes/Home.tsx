@@ -141,7 +141,6 @@ const Home = () => {
     if (!popular.isLoading) {
       const bigMovieIdx = Math.ceil(Math.random() * 19);
       setBigMovie(bigMovieIdx);
-      console.log(nowPlaying);
     }
   }, [popular.isLoading]);
 

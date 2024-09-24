@@ -1,9 +1,11 @@
 import { useQuery } from 'react-query';
-import { getTrendMovies, IMovie } from '../api';
+import { getMovieGenres, getTrendMovies, IMovie } from '../api';
 import { makeImgUrl, queryOption } from '../utils';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { genreState } from '../atom';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -12,9 +14,11 @@ const Wrapper = styled.div`
   min-height: 600px;
   padding: 0 5%;
   display: flex;
+  font-size: 15px;
 `;
 
 const Loading = styled.div`
+  width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -29,9 +33,44 @@ const Loading = styled.div`
 const BigMovie = styled.div<{ $bgImg: string }>`
   width: 75%;
   height: 100%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)),
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)),
     url(${(props) => props.$bgImg});
   background-size: 100% 100%;
+`;
+
+const InfoWrapper = styled.div`
+  padding-top: 20%;
+  padding-left: 5%;
+  padding-bottom: 20%;
+`;
+
+const Title = styled.div`
+  font-size: 4rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+`;
+const GenreBox = styled.div``;
+const Genre = styled.span`
+  display: inline-block;
+  padding: 5px 20px;
+  font-size: 1rem;
+  background-color: ${(props) => props.theme.gray.default};
+  border-radius: 5px;
+  margin-right: 1rem;
+`;
+
+const Release = styled.div`
+  font-size: 1rem;
+  margin-top: 4rem;
+  margin-bottom: 20px;
+  span:first-child {
+    color: ${(props) => props.theme.gray.lighter};
+  }
+`;
+
+const Overview = styled.p`
+  font-size: 1rem;
+  width: 70%;
 `;
 
 const List = styled.div`
@@ -94,8 +133,20 @@ const Trend = () => {
     getTrendMovies,
     queryOption
   );
-  const [curIdx, setCurIdx] = useState<number[]>([19, 0, 1]);
+  const [genreArr, setGenreArr] = useRecoilState(genreState);
+  const { data: genreData, isLoading: genreIsLoading } = useQuery(
+    'genres',
+    getMovieGenres,
+    { ...queryOption, enabled: genreArr === undefined }
+  );
 
+  useEffect(() => {
+    if (!isLoading) {
+      setGenreArr(genreData.genres);
+    }
+  }, [genreIsLoading]);
+
+  const [curIdx, setCurIdx] = useState<number[]>([19, 0, 1]);
   const prevMovie = () => {
     setCurIdx((bfArr) => {
       return bfArr.map((v) => (v === 0 ? 19 : v - 1));
@@ -107,14 +158,28 @@ const Trend = () => {
       return bfArr.map((v) => (v === 19 ? 0 : v + 1));
     });
   };
-
   return (
     <Wrapper>
-      {data && !isLoading ? (
+      {data && !isLoading && genreArr ? (
         <>
-          <BigMovie
-            $bgImg={makeImgUrl(data[curIdx[1]].backdrop_path)}
-          ></BigMovie>
+          <BigMovie $bgImg={makeImgUrl(data[curIdx[1]].backdrop_path)}>
+            <InfoWrapper>
+              <Title>{data[curIdx[1]].title}</Title>
+              <GenreBox>
+                {data[curIdx[1]].genre_ids.map((id) => {
+                  const idx = genreArr.findIndex((genre) => genre.id === id);
+                  return (
+                    <Genre key={genreArr[idx].id}>{genreArr[idx].name}</Genre>
+                  );
+                })}
+              </GenreBox>
+              <Release>
+                <span>개봉 |</span>
+                <span> {data[curIdx[1]].release_date}</span>
+              </Release>
+              <Overview>{data[curIdx[1]].overview}</Overview>
+            </InfoWrapper>
+          </BigMovie>
 
           <AnimatePresence>
             <List>

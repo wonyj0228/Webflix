@@ -191,7 +191,7 @@ const Detail = ({ movieId }: IProps) => {
                     <HeadCol>출연 | </HeadCol>
                     <span>
                       {credit.cast.reduce(
-                        (acc, cur) => acc + ' ' + cur.name,
+                        (acc, cur) => acc + cur.name + ',  ',
                         ''
                       )}
                     </span>

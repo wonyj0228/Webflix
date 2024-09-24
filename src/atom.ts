@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 
 export interface genre {
   id: number;
@@ -6,6 +6,6 @@ export interface genre {
 }
 
 export const genreState = atom<genre[]>({
-  key: "genres",
-  default: [],
+  key: 'genres',
+  default: undefined,
 });
