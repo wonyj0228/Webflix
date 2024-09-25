@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { IMovie } from "../api";
-import { AnimatePresence, Variants, motion } from "framer-motion";
-import { makeImgUrl, useWindowDimensions } from "../utils";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+import { IMovie } from '../api';
+import { AnimatePresence, Variants, motion } from 'framer-motion';
+import { makeImgUrl, useWindowDimensions } from '../utils';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -96,15 +96,15 @@ const Slider = ({ name, data }: IProps) => {
             animate="animate"
             exit="exit"
             custom={next}
-            transition={{ ease: "easeInOut", duration: 0.5 }}
+            transition={{ ease: 'easeInOut', duration: 0.5 }}
           >
             {data.slice(idx * 6, idx * 6 + 6).map((movie) => {
               return (
                 <Item
                   key={movie.id}
                   onClick={() => navigate(`/${movie.id}`)}
-                  layoutId={movie.id + ""}
-                  $bgImg={makeImgUrl(movie.poster_path, "w500")}
+                  layoutId={movie.id + ''}
+                  $bgImg={makeImgUrl(movie.poster_path, 'w500')}
                   whileHover={{
                     scaleY: 1.2,
                     scaleX: 1.1,

@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   min-width: 900px;
   height: 100vh;
   min-height: 600px;
-  padding: 0 5%;
+  padding: 0 5% 0 0;
   display: flex;
   font-size: 15px;
 `;
@@ -94,7 +94,7 @@ const List = styled.div`
 const BackPoster = styled(motion.div)<{ $bgImg: string }>`
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
     url(${(props) => props.$bgImg});
   background-size: 100% 135%;
   box-shadow: 0 0 10px gray;
@@ -158,6 +158,7 @@ const Trend = () => {
       return bfArr.map((v) => (v === 19 ? 0 : v + 1));
     });
   };
+
   return (
     <Wrapper>
       {data && !isLoading && genreArr ? (
@@ -187,16 +188,18 @@ const Trend = () => {
                 key={data[curIdx[0]].id}
                 $bgImg={makeImgUrl(data[curIdx[0]].poster_path)}
                 onClick={prevMovie}
-              />
+              ></BackPoster>
               <FrontPoster
                 key={data[curIdx[1]].id}
                 $bgImg={makeImgUrl(data[curIdx[1]].poster_path)}
+                initial={{ opacity: 0.5, scale: 1.1 }}
+                animate={{ opacity: 1, scale: 1, transition: { duration: 1 } }}
               />
               <BackPoster
                 key={data[curIdx[2]].id}
                 $bgImg={makeImgUrl(data[curIdx[2]].poster_path)}
                 onClick={nextMovie}
-              />
+              ></BackPoster>
             </List>
           </AnimatePresence>
         </>
