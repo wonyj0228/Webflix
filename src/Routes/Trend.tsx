@@ -141,7 +141,7 @@ const Trend = () => {
   );
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!genreIsLoading) {
       setGenreArr(genreData.genres);
     }
   }, [genreIsLoading]);
