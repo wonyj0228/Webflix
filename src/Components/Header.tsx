@@ -9,8 +9,9 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import React from 'react';
 
-const Nav = styled(motion.nav)`
+const Nav = styled(motion.nav)<{ $searchDisplay: boolean }>`
   position: fixed;
   top: 0;
   width: 100%;
@@ -19,6 +20,10 @@ const Nav = styled(motion.nav)`
   display: flex;
   justify-content: space-between;
   z-index: 99;
+
+  div:last-child {
+    display: ${(props) => (props.$searchDisplay ? 'block' : 'none')};
+  }
 `;
 
 const Col = styled.div`
@@ -93,8 +98,8 @@ const Header = () => {
   const { register, handleSubmit, setFocus, setValue } = useForm<{
     query: string;
   }>();
-  // const isSearch = useMatch('/search');
-  // console.log(isSearch);
+  const isSearch = useMatch('/search');
+
   const inputVariants: Variants = {
     initial: {
       scale: 0,
@@ -132,7 +137,12 @@ const Header = () => {
   };
 
   return (
-    <Nav variants={navVariants} initial="top" animate={navAnimation}>
+    <Nav
+      $searchDisplay={isSearch ? false : true}
+      variants={navVariants}
+      initial="top"
+      animate={navAnimation}
+    >
       <Col>
         <Logo
           xmlns="http://www.w3.org/2000/svg"
@@ -177,6 +187,7 @@ const Header = () => {
           </motion.svg>
           <Input
             {...register('query')}
+            autoComplete="off"
             onBlur={onBlur}
             variants={inputVariants}
             initial="initial"
@@ -189,4 +200,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default React.memo(Header);

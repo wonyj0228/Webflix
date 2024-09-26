@@ -73,6 +73,17 @@ a {
 ::-webkit-scrollbar {
   display: none;
 }
+html {
+  @media (max-width: 2000px) {
+    font-size: 20px;
+  }
+  @media (max-width: 1300px) {
+    font-size: 15px;
+  }
+  @media (max-width: 600px) {
+    font-size: 10px;
+  }
+}
 `;
 
 const Router = createBrowserRouter([
@@ -84,6 +95,7 @@ const Router = createBrowserRouter([
       { path: '/:movieId', element: <Home /> },
       { path: '/trend', element: <Trend /> },
       { path: '/search', element: <Search /> },
+      { path: '/search/:movieId', element: <Search /> },
     ],
   },
 ]);
