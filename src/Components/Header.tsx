@@ -6,7 +6,8 @@ import {
   useScroll,
 } from 'framer-motion';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Link, useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Nav = styled(motion.nav)`
@@ -89,7 +90,11 @@ const Header = () => {
   const { scrollY } = useScroll();
   const [search, setSearch] = useState(false);
   const navAnimation = useAnimation();
-
+  const { register, handleSubmit, setFocus, setValue } = useForm<{
+    query: string;
+  }>();
+  // const isSearch = useMatch('/search');
+  // console.log(isSearch);
   const inputVariants: Variants = {
     initial: {
       scale: 0,
@@ -106,6 +111,25 @@ const Header = () => {
       navAnimation.start('top');
     }
   });
+
+  const onValidSubmit: SubmitHandler<{ query: string }> = (data) => {
+    navigate(`/search?query=${data.query}`);
+  };
+
+  const setSearchMode = () => {
+    if (search) {
+      setValue('query', '');
+      setSearch(false);
+    } else {
+      setSearch(true);
+      setFocus('query');
+    }
+  };
+
+  const onBlur = () => {
+    setValue('query', '');
+    setSearch(false);
+  };
 
   return (
     <Nav variants={navVariants} initial="top" animate={navAnimation}>
@@ -131,9 +155,9 @@ const Header = () => {
         </Item>
       </Col>
       <Col>
-        <Search>
+        <Search onSubmit={handleSubmit(onValidSubmit)}>
           <motion.svg
-            onClick={() => setSearch((prev) => !prev)}
+            onClick={setSearchMode}
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -152,10 +176,12 @@ const Header = () => {
             ></path>
           </motion.svg>
           <Input
+            {...register('query')}
+            onBlur={onBlur}
             variants={inputVariants}
             initial="initial"
             animate="animate"
-            placeholder="Search for movie or tv show.."
+            placeholder="Search for movie.."
           />
         </Search>
       </Col>

@@ -78,3 +78,11 @@ export const getTrendMovies = () => {
     .then((res) => res.json())
     .then((data) => data.results);
 };
+
+export const searchMovies = (query: string) => {
+  return fetch(
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}&language=ko-KR`
+  )
+    .then((res) => res.json())
+    .then((data) => data.results);
+};

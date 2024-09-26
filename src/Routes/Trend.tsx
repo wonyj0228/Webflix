@@ -94,7 +94,7 @@ const List = styled.div`
 const BackPoster = styled(motion.div)<{ $bgImg: string }>`
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
     url(${(props) => props.$bgImg});
   background-size: 100% 135%;
   box-shadow: 0 0 10px gray;

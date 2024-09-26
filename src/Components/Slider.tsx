@@ -18,7 +18,8 @@ const HeadTitle = styled.div`
 `;
 const Cards = styled.div`
   position: relative;
-  height: 250px;
+  height: 30vh;
+  min-height: 250px;
   padding: 0 5%;
 `;
 
