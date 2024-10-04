@@ -2,7 +2,7 @@ import { UseQueryOptions, useQueries } from 'react-query';
 import styled from 'styled-components';
 import { IMovie, ICast, getMovieCredit, getMovieDetail } from '../api';
 import { useNavigate } from 'react-router-dom';
-import { AnimatePresence, easeIn, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { makeImgUrl, queryOption } from '../utils';
 
 const Loading = styled.div`
@@ -140,6 +140,14 @@ const Detail = ({ movieId }: IProps) => {
     },
   ]);
 
+  let directorName = '';
+  if (credit) {
+    const filtered = credit.crew.filter(
+      (v) => v.department === 'Directing' && v.job === 'Director'
+    );
+    if (filtered.length !== 0) directorName = filtered[0].name;
+  }
+
   return (
     <>
       <Back onClick={() => navigate(-1)} />
@@ -154,7 +162,7 @@ const Detail = ({ movieId }: IProps) => {
         >
           {detail && credit ? (
             <>
-              <Img $bgImg={makeImgUrl(detail.backdrop_path)}>
+              <Img $bgImg={makeImgUrl(detail.backdrop_path, 'w500')}>
                 <TitleBox>
                   <Title>{detail.title}</Title>
                   <Tagline>{detail.tagline}</Tagline>
@@ -185,7 +193,7 @@ const Detail = ({ movieId }: IProps) => {
                   <div>감독 및 출연</div>
                   <div>
                     <HeadCol>감독 | </HeadCol>
-                    <span>{credit.crew[0].name}</span>
+                    <span>{directorName}</span>
                   </div>
                   <div>
                     <HeadCol>출연 | </HeadCol>

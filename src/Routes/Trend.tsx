@@ -4,7 +4,7 @@ import { makeImgUrl, queryOption } from '../utils';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { genreState } from '../atom';
 
 const Wrapper = styled.div`
@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   padding: 0 5% 0 0;
   display: flex;
   font-size: 15px;
+  overflow: hidden;
 `;
 
 const Loading = styled.div`
@@ -30,15 +31,21 @@ const Loading = styled.div`
   }
 `;
 
-const BigMovie = styled.div<{ $bgImg: string }>`
+const BigMovie = styled.div`
+  position: relative;
   width: 75%;
   height: 100%;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)),
-    url(${(props) => props.$bgImg});
-  background-size: 100% 100%;
+`;
+
+const BigBg = styled.img`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0.5);
 `;
 
 const InfoWrapper = styled.div`
+  position: absolute;
   padding-top: 20%;
   padding-left: 5%;
   padding-bottom: 20%;
@@ -49,7 +56,6 @@ const Title = styled.div`
   font-weight: 600;
   margin-bottom: 2rem;
 `;
-const GenreBox = styled.div``;
 const Genre = styled.span`
   display: inline-block;
   padding: 5px 20px;
@@ -79,38 +85,37 @@ const List = styled.div`
   height: 100%;
   display: grid;
   grid-template-rows: 1fr 1fr;
-  row-gap: 30%;
 
-  div:first-child {
-    background-position: 0% 100%;
+  img:first-child {
+    position: absolute;
+    top: -10%;
     border-radius: 0 0 20px 20px;
   }
 
-  div:last-child {
+  img:last-child {
+    position: absolute;
+    bottom: -10%;
     border-radius: 20px 20px 0 0;
   }
 `;
 
-const BackPoster = styled(motion.div)<{ $bgImg: string }>`
+const BackPoster = styled(motion.img)`
   width: 100%;
-  height: 100%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-    url(${(props) => props.$bgImg});
-  background-size: 100% 135%;
-  box-shadow: 0 0 10px gray;
+  height: 50%;
+  min-height: 50%;
+  box-shadow: 0 0 20px gray;
+  border-left: 1.5px solid gray;
   cursor: pointer;
+  filter: brightness(0.5);
 `;
 
-const FrontPoster = styled(motion.div)<{ $bgImg: string }>`
+const FrontPoster = styled(motion.img)`
   position: absolute;
   z-index: 1;
   width: 110%;
   height: 60%;
   left: -55%;
   top: 20%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url(${(props) => props.$bgImg});
-  background-size: 100% 100%;
   border-radius: 20px;
   box-shadow: 0 0 30px gray;
 `;
@@ -134,6 +139,7 @@ const Trend = () => {
     queryOption
   );
   const [genreArr, setGenreArr] = useRecoilState(genreState);
+
   const { data: genreData, isLoading: genreIsLoading } = useQuery(
     'genres',
     getMovieGenres,
@@ -163,17 +169,18 @@ const Trend = () => {
     <Wrapper>
       {data && !isLoading && genreArr ? (
         <>
-          <BigMovie $bgImg={makeImgUrl(data[curIdx[1]].backdrop_path)}>
+          <BigMovie>
+            <BigBg src={makeImgUrl(data[curIdx[1]].backdrop_path)} />
             <InfoWrapper>
               <Title>{data[curIdx[1]].title}</Title>
-              <GenreBox>
+              <div>
                 {data[curIdx[1]].genre_ids.map((id) => {
                   const idx = genreArr.findIndex((genre) => genre.id === id);
                   return (
                     <Genre key={genreArr[idx].id}>{genreArr[idx].name}</Genre>
                   );
                 })}
-              </GenreBox>
+              </div>
               <Release>
                 <span>개봉 |</span>
                 <span> {data[curIdx[1]].release_date}</span>
@@ -186,18 +193,18 @@ const Trend = () => {
             <List>
               <BackPoster
                 key={data[curIdx[0]].id}
-                $bgImg={makeImgUrl(data[curIdx[0]].poster_path)}
+                src={makeImgUrl(data[curIdx[0]].poster_path)}
                 onClick={prevMovie}
               ></BackPoster>
               <FrontPoster
                 key={data[curIdx[1]].id}
-                $bgImg={makeImgUrl(data[curIdx[1]].poster_path)}
+                src={makeImgUrl(data[curIdx[1]].poster_path)}
                 initial={{ opacity: 0.5, scale: 1.1 }}
                 animate={{ opacity: 1, scale: 1, transition: { duration: 1 } }}
               />
               <BackPoster
                 key={data[curIdx[2]].id}
-                $bgImg={makeImgUrl(data[curIdx[2]].poster_path)}
+                src={makeImgUrl(data[curIdx[2]].poster_path)}
                 onClick={nextMovie}
               ></BackPoster>
             </List>

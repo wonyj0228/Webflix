@@ -16,8 +16,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  /* font-size: 20px; */
 `;
 
 const SearchBox = styled.form`
@@ -94,9 +92,7 @@ const Row = styled.div`
   width: 100%;
 `;
 
-const Item = styled(motion.div)<{ $bgImg: string }>`
-  background-image: url(${(props) => props.$bgImg});
-  background-size: 100% 100%;
+const Item = styled(motion.img)`
   border-radius: 5px;
   box-shadow: 0 0 3px gray;
   height: 16rem;
@@ -203,7 +199,7 @@ const Search = () => {
                       navigate(`/search/${movie.id}?query=${queryString}`)
                     }
                     layoutId={movie.id + ''}
-                    $bgImg={makeImgUrl(movie.poster_path, 'w500')}
+                    src={makeImgUrl(movie.poster_path, 'w500')}
                     whileHover={{
                       scale: 1.2,
                       zIndex: 90,

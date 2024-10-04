@@ -4,6 +4,7 @@ import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { makeImgUrl, useWindowDimensions } from '../utils';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import media from '../media';
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,9 +19,24 @@ const HeadTitle = styled.div`
 `;
 const Cards = styled.div`
   position: relative;
-  height: 30vh;
-  min-height: 250px;
+  box-sizing: border-box;
   padding: 0 5%;
+
+  ${media.extraSmall`
+    height : 100px;
+  `}
+  ${media.small`
+    height : 150px;
+  `}
+  ${media.medium`
+    height : 180px;
+  `}
+  ${media.large`
+    height : 250px;
+  `}
+  ${media.extraLarge`
+    height : 300px;
+  `}
 `;
 
 const Row = styled(motion.div)`
@@ -34,9 +50,10 @@ const Row = styled(motion.div)`
   width: 90%;
 `;
 
-const Item = styled(motion.div)<{ $bgImg: string }>`
-  background-image: url(${(props) => props.$bgImg});
-  background-size: 100% 100%;
+const Item = styled(motion.img)`
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
   border-radius: 5px;
   box-shadow: 0 0 3px gray;
   cursor: pointer;
@@ -103,9 +120,9 @@ const Slider = ({ name, data }: IProps) => {
               return (
                 <Item
                   key={movie.id}
+                  alt={`${movie.title}의 포스터 이미지`}
                   onClick={() => navigate(`/${movie.id}`)}
-                  layoutId={movie.id + ''}
-                  $bgImg={makeImgUrl(movie.poster_path, 'w500')}
+                  src={makeImgUrl(movie.poster_path, 'w500')}
                   whileHover={{
                     scaleY: 1.2,
                     scaleX: 1.1,

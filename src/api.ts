@@ -21,7 +21,7 @@ export interface IMovie {
 
 export interface ICast {
   cast: { name: string }[];
-  crew: { name: string; job: string }[];
+  crew: { name: string; department: string; job: string }[];
 }
 
 export const getNowPlaying = () => {
