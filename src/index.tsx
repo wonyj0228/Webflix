@@ -73,7 +73,7 @@ a {
 ::-webkit-scrollbar {
   display: none;
 }
-html {
+/* html {
   @media (max-width: 2000px) {
     font-size: 20px;
   }
@@ -83,7 +83,7 @@ html {
   @media (max-width: 600px) {
     font-size: 10px;
   }
-}
+} */
 `;
 
 const Router = createBrowserRouter([

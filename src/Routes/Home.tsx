@@ -17,9 +17,11 @@ import Detail from '../Components/Detail';
 import { queryOption } from '../utils';
 import { useSetRecoilState } from 'recoil';
 import { genreState } from '../atom';
+import media from '../media';
 
 const Wrapper = styled.div`
   position: relative;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,31 +30,50 @@ const Wrapper = styled.div`
 
 const BigMovie = styled.div<{ $bgImg: string }>`
   width: 100%;
-  height: 95vh;
-  min-height: 700px;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url(${(props) => props.$bgImg});
   background-size: 100% 100%;
   display: flex;
   flex-direction: column;
   justify-content: end;
+
+  ${media.extraSmall`
+    height : 500px;
+    font-size : 12px;
+  `}
+  ${media.small`
+    height : 500px;
+    font-size : 12px;
+  `}
+  ${media.medium`
+    height : 550px;
+    font-size : 12px;
+  `}
+  ${media.large`
+    height : 750px;
+    font-size : 15px;
+  `}
+  ${media.extraLarge`
+    height : 900px;
+    font-size : 17px;
+  `}
 `;
 
 const Info = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 280px;
-  padding: 0 5%;
+  padding: 50px 5% 0 5%;
 `;
 
 const Title = styled.div`
-  font-size: 60px;
+  font-size: 3em;
   font-weight: 500;
+  margin-bottom: 20px;
 `;
 const Overview = styled.p`
-  font-size: 15px;
-  width: 40%;
+  font-size: 1em;
+  width: 45%;
+  margin-bottom: 20px;
   display: -webkit-box;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
@@ -64,12 +85,12 @@ const Btn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
-  height: 40px;
   background-color: rgba(40, 40, 40, 0.9);
   color: white;
   font-weight: 300;
-  font-size: 18px;
+  font-size: 1em;
+  width: 10em;
+  height: 2.5em;
   border-radius: 5px;
   cursor: pointer;
 

@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useMatch, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import React from 'react';
+import media from '../media';
 
 const Nav = styled(motion.nav)<{ $searchDisplay: boolean }>`
   position: fixed;
@@ -21,9 +22,19 @@ const Nav = styled(motion.nav)<{ $searchDisplay: boolean }>`
   justify-content: space-between;
   z-index: 99;
 
-  div:last-child {
+  /* div:last-child {
     display: ${(props) => (props.$searchDisplay ? 'block' : 'none')};
-  }
+  } */
+
+  ${media.extraSmall`
+    font-size : 10px;
+  `}
+  ${media.medium`
+    font-size : 13px;
+  `}
+  ${media.large`
+    font-size : 15px;
+  `}
 `;
 
 const Col = styled.div`
@@ -41,24 +52,40 @@ const Logo = styled(motion.svg)`
 const Item = styled.li`
   list-style-type: none;
   margin-right: 30px;
-  font-size: 1.5em;
 `;
 
 const Search = styled.form`
-  display: flex;
-  align-items: center;
-  position: relative;
-
   svg {
     height: 20px;
-    z-index: 99;
     cursor: pointer;
   }
+  ${media.extraSmall`
+    display:none;
+  `}
+  ${media.small`
+    display:block;
+  `}
 `;
+
+const SearchBtn = styled.div`
+  display: flex;
+  align-items: center;
+  svg {
+    height: 20px;
+    cursor: pointer;
+  }
+  ${media.extraSmall`
+    display:block;
+  `}
+  ${media.small`
+      display:none;
+  `}
+`;
+
 const Input = styled(motion.input)`
   transform-origin: right center;
   width: 250px;
-  font-size: 1.5em;
+  font-size: 1em;
   border: white 0.7px solid;
   padding: 10px 10px 10px 45px;
   outline: none;
@@ -106,6 +133,9 @@ const Header = () => {
     },
     animate: {
       scale: search ? 1 : 0,
+      transition: {
+        delay: 0.1,
+      },
     },
   };
 
@@ -171,11 +201,13 @@ const Header = () => {
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
-            initial={{ x: 250 }}
+            initial={{ x: 250, y: 5 }}
             animate={{
               x: search ? 35 : 250,
+              y: 5,
               transition: {
                 type: 'ease',
+                duration: 0.2,
               },
             }}
           >
@@ -195,6 +227,19 @@ const Header = () => {
             placeholder="Search for movie.."
           />
         </Search>
+        <SearchBtn onClick={() => navigate('/search')}>
+          <svg
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        </SearchBtn>
       </Col>
     </Nav>
   );

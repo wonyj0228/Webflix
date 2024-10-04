@@ -13,9 +13,21 @@ const Wrapper = styled.div`
 `;
 const HeadTitle = styled.div`
   padding: 0 5%;
-  font-size: 2em;
   font-weight: bold;
   margin-bottom: 15px;
+
+  ${media.extraSmall`
+    font-size : 15px;
+  `}
+  ${media.small`
+    font-size : 15px;
+  `}
+  ${media.medium`
+    font-size : 20px;
+  `}
+  ${media.large`
+    font-size : 25px;
+  `}
 `;
 const Cards = styled.div`
   position: relative;
