@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { IMovie } from '../api';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { makeImgUrl, useWindowDimensions } from '../utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import media from '../media';
 
@@ -35,7 +35,7 @@ const Cards = styled.div`
   padding: 0 5%;
 
   ${media.extraSmall`
-    height : 100px;
+    height : 200px;
   `}
   ${media.small`
     height : 150px;
@@ -47,16 +47,16 @@ const Cards = styled.div`
     height : 250px;
   `}
   ${media.extraLarge`
-    height : 300px;
+    height : 320px;
   `}
 `;
 
-const Row = styled(motion.div)`
+const Row = styled(motion.div)<{ $itemCnt: number }>`
   position: absolute;
   left: 5%;
   right: 5%;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(${(props) => props.$itemCnt}, 1fr);
   gap: 5px;
   height: 100%;
   width: 90%;
@@ -96,15 +96,27 @@ const Slider = ({ name, data }: IProps) => {
   const navigate = useNavigate();
   const width = useWindowDimensions();
 
-  const [idx, setIdx] = useState<number>(0);
+  const [itemCnt, setItemCnt] = useState(width >= 600 ? 6 : 3);
+  const [idx, setIdx] = useState(0);
   const [next, setNext] = useState(true);
 
+  useEffect(() => {
+    if (width >= 600 && itemCnt === 3) {
+      setItemCnt(6);
+      if (idx % 6 !== 0) {
+        setIdx((prev) => prev - 3);
+      }
+    } else if (width < 600 && itemCnt === 6) {
+      setItemCnt(3);
+    }
+  }, [width]);
+
   const nextOnClick = () => {
-    setIdx((prev) => prev + 1);
+    setIdx((prev) => prev + itemCnt);
     setNext(true);
   };
   const prevOnClick = () => {
-    setIdx((prev) => prev - 1);
+    setIdx((prev) => prev - itemCnt);
     setNext(false);
   };
 
@@ -120,6 +132,7 @@ const Slider = ({ name, data }: IProps) => {
       <Cards>
         <AnimatePresence custom={next} initial={false}>
           <Row
+            $itemCnt={itemCnt}
             key={idx}
             variants={rowVariants}
             initial="initial"
@@ -128,7 +141,7 @@ const Slider = ({ name, data }: IProps) => {
             custom={next}
             transition={{ ease: 'easeInOut', duration: 0.5 }}
           >
-            {data.slice(idx * 6, idx * 6 + 6).map((movie) => {
+            {data.slice(idx, idx + itemCnt).map((movie) => {
               return (
                 <Item
                   key={movie.id}
@@ -158,7 +171,7 @@ const Slider = ({ name, data }: IProps) => {
             </motion.svg>
           </Btn>
         ) : null}
-        {idx !== 2 ? (
+        {idx !== 18 - itemCnt ? (
           <Btn onClick={nextOnClick} style={{ right: 0, top: 0 }}>
             <motion.svg
               xmlns="http://www.w3.org/2000/svg"

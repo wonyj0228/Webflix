@@ -16,6 +16,11 @@ export const useWindowDimensions = () => {
     window.addEventListener('resize', () => {
       setWindowWidth(getWindowDimensions());
     });
+    return () => {
+      window.removeEventListener('resize', () => {
+        setWindowWidth(getWindowDimensions());
+      });
+    };
   }, []);
 
   return windowWidth;

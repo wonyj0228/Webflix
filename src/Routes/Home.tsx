@@ -38,7 +38,7 @@ const BigMovie = styled.div<{ $bgImg: string }>`
   justify-content: end;
 
   ${media.extraSmall`
-    height : 500px;
+    height : 600px;
     font-size : 12px;
   `}
   ${media.small`
