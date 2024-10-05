@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import React from 'react';
 import media from '../media';
 
-const Nav = styled(motion.nav)<{ $searchDisplay: boolean }>`
+const Nav = styled(motion.nav)`
   position: fixed;
   top: 0;
   width: 100%;
@@ -21,10 +21,6 @@ const Nav = styled(motion.nav)<{ $searchDisplay: boolean }>`
   display: flex;
   justify-content: space-between;
   z-index: 99;
-
-  /* div:last-child {
-    display: ${(props) => (props.$searchDisplay ? 'block' : 'none')};
-  } */
 
   ${media.extraSmall`
     font-size : 10px;
@@ -54,7 +50,7 @@ const Item = styled.li`
   margin-right: 30px;
 `;
 
-const Search = styled.form`
+const Search = styled.form<{ $isSearch: boolean }>`
   svg {
     height: 20px;
     cursor: pointer;
@@ -63,11 +59,12 @@ const Search = styled.form`
     display:none;
   `}
   ${media.small`
-    display:block;
+    display: ${(props: { $isSearch: boolean }) =>
+      props.$isSearch ? 'none' : 'block'};
   `}
 `;
 
-const SearchBtn = styled.div`
+const SearchBtn = styled.div<{ $isSearch: boolean }>`
   display: flex;
   align-items: center;
   svg {
@@ -75,7 +72,8 @@ const SearchBtn = styled.div`
     cursor: pointer;
   }
   ${media.extraSmall`
-    display:block;
+    display: ${(props: { $isSearch: boolean }) =>
+      props.$isSearch ? 'none' : 'block'};
   `}
   ${media.small`
       display:none;
@@ -167,12 +165,7 @@ const Header = () => {
   };
 
   return (
-    <Nav
-      $searchDisplay={isSearch ? false : true}
-      variants={navVariants}
-      initial="top"
-      animate={navAnimation}
-    >
+    <Nav variants={navVariants} initial="top" animate={navAnimation}>
       <Col>
         <Logo
           xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +188,10 @@ const Header = () => {
         </Item>
       </Col>
       <Col>
-        <Search onSubmit={handleSubmit(onValidSubmit)}>
+        <Search
+          $isSearch={isSearch ? true : false}
+          onSubmit={handleSubmit(onValidSubmit)}
+        >
           <motion.svg
             onClick={setSearchMode}
             fill="currentColor"
@@ -227,7 +223,10 @@ const Header = () => {
             placeholder="Search for movie.."
           />
         </Search>
-        <SearchBtn onClick={() => navigate('/search')}>
+        <SearchBtn
+          $isSearch={isSearch ? true : false}
+          onClick={() => navigate('/search')}
+        >
           <svg
             fill="currentColor"
             viewBox="0 0 20 20"

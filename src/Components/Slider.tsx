@@ -15,19 +15,7 @@ const HeadTitle = styled.div`
   padding: 0 5%;
   font-weight: bold;
   margin-bottom: 15px;
-
-  ${media.extraSmall`
-    font-size : 15px;
-  `}
-  ${media.small`
-    font-size : 15px;
-  `}
-  ${media.medium`
-    font-size : 20px;
-  `}
-  ${media.large`
-    font-size : 25px;
-  `}
+  font-size: 1.5rem;
 `;
 const Cards = styled.div`
   position: relative;
@@ -57,7 +45,7 @@ const Row = styled(motion.div)<{ $itemCnt: number }>`
   right: 5%;
   display: grid;
   grid-template-columns: repeat(${(props) => props.$itemCnt}, 1fr);
-  gap: 5px;
+  gap: 10px;
   height: 100%;
   width: 90%;
 `;

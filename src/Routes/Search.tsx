@@ -5,12 +5,12 @@ import { useMatch, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { IMovie, searchMovies } from '../api';
 import { motion } from 'framer-motion';
-import { makeImgUrl } from '../utils';
+import { makeImgUrl, useWindowDimensions } from '../utils';
 import Detail from '../Components/Detail';
+import media from '../media';
 
 const Wrapper = styled.div`
   position: relative;
-  min-height: 100vh;
   padding: 0 5%;
   padding-bottom: 5rem;
   display: flex;
@@ -22,12 +22,12 @@ const SearchBox = styled.form`
   position: relative;
   padding-top: 10rem;
   display: flex;
-  align-items: end;
-  padding-bottom: 10px;
+  align-items: center;
+  padding-bottom: 2px;
   width: 70%;
   border-bottom: 1px solid ${(props) => props.theme.white.default};
   svg {
-    width: 60px;
+    width: 2rem;
   }
 `;
 
@@ -36,7 +36,7 @@ const SearchInput = styled.input`
   height: 4rem;
   margin-right: 10px;
   font-family: inherit;
-  font-size: 2rem;
+  font-size: 1.2rem;
   color: ${(props) => props.theme.white.default};
   background-color: inherit;
   outline: none;
@@ -47,6 +47,7 @@ const ErrorMessage = styled.p`
   position: absolute;
   bottom: -3rem;
   color: ${(props) => props.theme.darkRed};
+  font-size: 1rem;
 `;
 
 const ResultsBox = styled.div`
@@ -79,24 +80,95 @@ const loadingVariants = {
 };
 
 const SearchWord = styled.p`
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 30px;
 `;
 
-const Row = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-  grid-row-gap: 30px;
+const Row = styled.div<{ $itemCnt: number }>`
   width: 100%;
+  display: grid;
+  grid-template-columns: repeat(${(props) => props.$itemCnt}, 1fr);
+  grid-gap: 10px;
+  grid-row-gap: 30px;
+  justify-items: center;
 `;
 
 const Item = styled(motion.img)`
   border-radius: 5px;
   box-shadow: 0 0 3px gray;
-  height: 16rem;
   cursor: pointer;
+  ${media.extraSmall`
+    height :150px;
+  `}
+  ${media.small`
+    height : 180px;
+  `}
+  ${media.medium`
+    height : 200px;
+  `}
+  ${media.large`
+    height : 230px;
+  `}
+  ${media.extraLarge`
+    height : 280px;
+  `}
+`;
+
+const NoImgItem = styled(motion.div)`
+  border-radius: 5px;
+  box-shadow: 0 0 3px gray;
+  aspect-ratio: 1/1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  cursor: pointer;
+  background-color: ${(props) => props.theme.gray.default};
+  ${media.extraSmall`
+    height :150px;
+  `}
+  ${media.small`
+    height : 180px;
+  `}
+  ${media.medium`
+    height : 200px;
+  `}
+  ${media.large`
+    height : 230px;
+  `}
+  ${media.extraLarge`
+    height : 280px;
+  `}
+
+  svg {
+    width: 5rem;
+    fill: ${(props) => props.theme.darkRed};
+  }
+  p:first-child {
+    font-size: 1.2rem;
+  }
+  p:last-child {
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding: 0 5%;
+  }
+`;
+
+const NoResults = styled.div`
+  width: 100%;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  svg {
+    width: 5rem;
+    fill: ${(props) => props.theme.darkRed};
+  }
+  p {
+    font-size: 2rem;
+  }
 `;
 
 const Search = () => {
@@ -118,6 +190,21 @@ const Search = () => {
       refetchIntervalInBackground: false,
     }
   );
+
+  const width = useWindowDimensions();
+  const [itemCnt, setItemCnt] = useState<number>(0);
+
+  useEffect(() => {
+    if (width <= 600) {
+      setItemCnt(3);
+    } else if (width < 800 && width > 600) {
+      setItemCnt(4);
+    } else if (width < 1300 && width >= 800) {
+      setItemCnt(5);
+    } else if (width >= 1300) {
+      setItemCnt(6);
+    }
+  }, [width]);
 
   useEffect(() => {
     return () => {
@@ -190,15 +277,14 @@ const Search = () => {
         ) : data && data.length > 0 ? (
           <>
             <SearchWord>{`'${queryString}' 검색 결과`}</SearchWord>
-            <Row>
-              {data.map((movie) => {
-                return (
+            <Row $itemCnt={itemCnt}>
+              {data.map((movie) =>
+                movie.poster_path ? (
                   <Item
                     key={movie.id}
                     onClick={() =>
                       navigate(`/search/${movie.id}?query=${queryString}`)
                     }
-                    layoutId={movie.id + ''}
                     src={makeImgUrl(movie.poster_path, 'w500')}
                     whileHover={{
                       scale: 1.2,
@@ -206,11 +292,40 @@ const Search = () => {
                       transition: { delay: 0.2 },
                     }}
                   />
-                );
-              })}
+                ) : (
+                  <NoImgItem
+                    key={movie.id}
+                    onClick={() =>
+                      navigate(`/search/${movie.id}?query=${queryString}`)
+                    }
+                    whileHover={{
+                      scale: 1.2,
+                      zIndex: 90,
+                      transition: { delay: 0.2 },
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 -960 960 960"
+                    >
+                      <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg>
+                    <p>no image</p>
+                    <p>{movie.title}</p>
+                  </NoImgItem>
+                )
+              )}
             </Row>
           </>
-        ) : null}
+        ) : (
+          <NoResults>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+              <path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+            </svg>
+            <p>{`"${queryString}"`}</p>
+            <p>검색 결과가 없습니다.</p>
+          </NoResults>
+        )}
       </ResultsBox>
       {isDetail && <Detail movieId={isDetail.params.movieId || ''} />}
     </Wrapper>

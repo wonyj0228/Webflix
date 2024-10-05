@@ -10,6 +10,7 @@ import { RecoilRoot } from 'recoil';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Trend from './Routes/Trend';
+import media from './media';
 
 const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
@@ -73,17 +74,23 @@ a {
 ::-webkit-scrollbar {
   display: none;
 }
-/* html {
-  @media (max-width: 2000px) {
-    font-size: 20px;
-  }
-  @media (max-width: 1300px) {
-    font-size: 15px;
-  }
-  @media (max-width: 600px) {
-    font-size: 10px;
-  }
-} */
+html {
+  ${media.extraSmall`
+    font-size : 12px;
+  `}
+  ${media.small`
+    font-size : 12px;
+  `}
+  ${media.medium`
+    font-size : 12px;
+  `}
+  ${media.large`
+    font-size : 15px;
+  `}
+  ${media.extraLarge`
+    font-size : 17px;
+  `}
+}
 `;
 
 const Router = createBrowserRouter([
