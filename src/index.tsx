@@ -93,19 +93,22 @@ html {
 }
 `;
 
-const Router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    children: [
-      { index: true, path: '/', element: <Home /> },
-      { path: '/:movieId', element: <Home /> },
-      { path: '/trend', element: <Trend /> },
-      { path: '/search', element: <Search /> },
-      { path: '/search/:movieId', element: <Search /> },
-    ],
-  },
-]);
+const Router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <App />,
+      children: [
+        { index: true, path: '/', element: <Home /> },
+        { path: '/:movieId', element: <Home /> },
+        { path: '/trend', element: <Trend /> },
+        { path: '/search', element: <Search /> },
+        { path: '/search/:movieId', element: <Search /> },
+      ],
+    },
+  ],
+  { basename: process.env.PUBLIC_URL }
+);
 
 const client = new QueryClient();
 
